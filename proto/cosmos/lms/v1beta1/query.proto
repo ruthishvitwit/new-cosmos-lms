@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package cosmos.lms.v1beta1;
+
+option go_package = "x/lms/types";
+
+import "cosmos/lms/v1beta1/tx.proto";
+import "google/api/annotations.proto" ; 
+
+
+service Query {
+    rpc QueryGetStudent(GetStudentRequest) returns (GetStudentResponse){
+        option (google.api.http).get   = "/cosmos/lms/v1beta1/getstudent";
+    };
+  
+}
+
+message GetStudentRequest {
+
+}
+
+message GetStudentResponse {
+    repeated Student students = 1;
+
+}
