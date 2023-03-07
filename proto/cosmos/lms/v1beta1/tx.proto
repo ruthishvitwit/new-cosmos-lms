@@ -4,9 +4,9 @@ package cosmos.lms.v1beta1;
 
 option go_package = "x/lms/types";
 
-//import "google/protobuf/timestamp.proto";
+import "google/protobuf/timestamp.proto";
 
-//import "gogoproto/gogo.proto";
+import "gogoproto/gogo.proto";
 
 service Msg {
     // RegisterAdmin adds a new admin
@@ -15,11 +15,11 @@ service Msg {
     // AddStudent adds new student
     rpc AddStudents(AddStudentRequest) returns (AddStudentResponse){};
     
-    // // ApplyLeave request a new leave
-    // rpc LeaveApply(ApplyLeaveRequest) returns (ApplyLeaveResponse){};
+    // ApplyLeave request a new leave
+    rpc ApplyLeaves(ApplyLeaveRequest) returns (ApplyLeaveResponse){};
     
-    // // AcceptLeave accept or reject a leave
-    // rpc LeaveAccept(AcceptLeaveRequest) returns (AcceptLeaveResponse){};
+    // AcceptLeave accept or reject a leave
+//     rpc LeaveAccept(AcceptLeaveRequest) returns (AcceptLeaveResponse){};
 }
 
 message RegisterAdminRequest {
@@ -42,20 +42,15 @@ message AddStudentRequest {
 
 message AddStudentResponse{}
 
-// message ApplyLeaveRequest {
+message ApplyLeaveRequest {
+    string admin =1;
     
-//     string address = 1;
-    
-//     string reason = 2;
-    
-//     google.protobuf.Timestamp from = 3 [(gogoproto.stdtime)=true];
-    
-//     google.protobuf.Timestamp to = 4 [(gogoproto.stdtime)=true];
-// }
+    repeated leave leaves=2;
+}
 
-// message ApplyLeaveResponse {
+message ApplyLeaveResponse {
 
-// }
+}
 
 // enum LeaveStatus {
 //     STATUS_UNDEFINED = 0;
@@ -88,6 +83,14 @@ message AddStudentResponse{}
     // id is a unique student id.
     string id = 3;
 }
-
+message leave {
+    string address = 1;
+    
+    string reason = 2;
+    
+    google.protobuf.Timestamp from = 3 [(gogoproto.stdtime)=true];
+    
+    google.protobuf.Timestamp to = 4 [(gogoproto.stdtime)=true];
+}
 
 

@@ -84,3 +84,39 @@ func (msg AddStudentRequest) ValidateBasic() error {
 	}
 	return nil
 }
+func NewApplyLeaveReq(accountAddr sdk.AccAddress, leaves []*Leave) *ApplyLeaveRequest {
+	return &ApplyLeaveRequest{
+		Admin:  accountAddr.String(),
+		Leaves: leaves,
+	}
+}
+
+func (msg ApplyLeaveRequest) GetSignBytes() []byte {
+	return []byte{}
+}
+
+func (msg ApplyLeaveRequest) Route() string {
+	return RouterKey
+}
+
+func (msg ApplyLeaveRequest) Type() string {
+	return TypeAddStudent
+}
+
+func (msg ApplyLeaveRequest) GetSigners() []sdk.AccAddress {
+	valAddr, _ := sdk.AccAddressFromBech32(msg.Admin)
+	// valAddr, _ := sdk.AccAddressFromBech32(msg.Admin)
+	return []sdk.AccAddress{sdk.AccAddress(valAddr)}
+}
+
+func (msg ApplyLeaveRequest) ValidateBasic() error {
+	if _, err := sdk.AccAddressFromBech32(msg.Admin); err != nil {
+		return sdkerrors.ErrInvalidAddress.Wrapf("account input address: %s", err)
+	}
+	if msg.Admin == "" {
+		return errors.New("admin address cannot be empty")
+	} else if msg.Leaves == nil {
+		return errors.New("students list cannot be empty, no students provided")
+	}
+	return nil
+}

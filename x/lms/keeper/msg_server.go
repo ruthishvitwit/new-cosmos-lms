@@ -24,3 +24,8 @@ func (k Keeper) AddStudents(ctx context.Context, req *types.AddStudentRequest) (
 	k.AddStudent(sdkCtx, req)
 	return &types.AddStudentResponse{}, nil
 }
+func (k Keeper) ApplyLeaves(ctx context.Context, req *types.ApplyLeaveRequest) (*types.ApplyLeaveResponse, error) {
+	sdkCtx := sdk.UnwrapSDKContext(ctx)
+	k.ApplyLeave(sdkCtx, req)
+	return &types.ApplyLeaveResponse{}, nil
+}

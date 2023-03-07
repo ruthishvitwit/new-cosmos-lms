@@ -1,4 +1,4 @@
-package simapp
+package lmsapp
 
 import (
 	"errors"

@@ -26,6 +26,7 @@ func TxCmd() *cobra.Command {
 	txCmd.AddCommand(
 		NewRegisterAdminCmd(),
 		NewAddStudentRequestCmd(),
+		NewApplyLeaveRequestCmd(),
 	)
 	return txCmd
 }
@@ -75,6 +76,32 @@ func NewAddStudentRequestCmd() *cobra.Command {
 			students = append(students, student)
 
 			msg := types.NewAddStudentReq(adminaddress, students)
+			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
+		},
+	}
+	flags.AddTxFlagsToCmd(cmd)
+	return cmd
+}
+func NewApplyLeaveRequestCmd() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "aplyleave",
+		Short: "...",
+		Long:  "This is used to apply leaves",
+		Args:  cobra.ExactArgs(3),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			clientCtx, err := client.GetClientTxContext(cmd)
+			if err != nil {
+				return err
+			}
+			adminaddress, _ := sdk.AccAddressFromBech32(args[0])
+			leaves := []*types.Leave{}
+			leave := &types.Leave{
+				Address: args[1],
+				Reason:  args[2],
+			}
+			leaves = append(leaves, leave)
+
+			msg := types.NewApplyLeaveReq(adminaddress, leaves)
 			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
 		},
 	}

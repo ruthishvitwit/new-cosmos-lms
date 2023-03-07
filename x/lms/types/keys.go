@@ -1,5 +1,7 @@
 package types
 
+import "strconv"
+
 const (
 	Modulename   = "lms"
 	StoreKey     = Modulename
@@ -8,8 +10,10 @@ const (
 )
 
 var (
-	AKey = []byte{0x01}
-	SKey = []byte{0x02}
+	AKey  = []byte{0x01}
+	SKey  = []byte{0x02}
+	LKey  = []byte{0x03}
+	LcKey = []byte{0x04}
 )
 
 func AdminKey(admin string) []byte {
@@ -22,5 +26,20 @@ func StudentKey(student string) []byte {
 	key := make([]byte, len(SKey)+len(student))
 	copy(key, SKey)
 	copy(key[len(SKey):], []byte(student))
+	return key
+}
+func LeaveKey(student string, leave int) []byte {
+	leaveId := strconv.Itoa(leave)
+	key := make([]byte, len(LKey)+len(student)+len(leaveId))
+	copy(key, LKey)
+	copy(key[len(LKey):], []byte(student))
+	copy(key[len(LKey)+len(student):], []byte(leaveId))
+	return key
+}
+
+func LeaveCounterKey(id string) []byte {
+	key := make([]byte, len(LcKey)+len(id))
+	copy(key, LcKey)
+	copy(key[len(LcKey):], id)
 	return key
 }

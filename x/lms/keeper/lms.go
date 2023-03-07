@@ -4,6 +4,7 @@ import (
 	"clms/x/lms/types"
 	"fmt"
 	"log"
+	"strconv"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
@@ -44,6 +45,30 @@ func (k Keeper) AddStudent(ctx sdk.Context, addStudent *types.AddStudentRequest)
 	}
 	return "Students Added Successfully"
 }
+func (k Keeper) ApplyLeave(ctx sdk.Context, applyleave *types.ApplyLeaveRequest) string {
+	leaves := applyleave.Leaves
+	store := ctx.KVStore(k.storeKey)
+	for _, stud := range leaves {
+		marshalaplylv, err := k.cdc.Marshal(stud)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		leaveid := store.Get(types.LeaveCounterKey(applyleave.Admin))
+		leaveId, _ := strconv.Atoi(string(leaveid))
+		//k.cdc.Unmarshal(leaveid, &ty)
+		if leaveid == nil {
+			leaveId = 0
+		}
+
+		leaveId++
+		store.Set(types.LeaveCounterKey(applyleave.Admin), []byte(strconv.Itoa(leaveId)))
+
+		store.Set(types.LeaveKey(applyleave.Admin, leaveId), marshalaplylv)
+
+	}
+	return "Students Added Successfully"
+}
 func (k Keeper) GetStudents(ctx sdk.Context, getStudents *types.GetStudentRequest) []*types.Student {
 	store := ctx.KVStore(k.storeKey)
 
@@ -55,4 +80,16 @@ func (k Keeper) GetStudents(ctx sdk.Context, getStudents *types.GetStudentReques
 		students = append(students, &t)
 	}
 	return students
+}
+func (k Keeper) GetLeaves(ctx sdk.Context, getLeaves *types.GetLeavesRequest) []*types.Leave {
+	store := ctx.KVStore(k.storeKey)
+
+	var leaves []*types.Leave
+	itr := store.Iterator(types.SKey, nil)
+	for ; itr.Valid(); itr.Next() {
+		var t types.Leave
+		k.cdc.Unmarshal(itr.Value(), &t)
+		leaves = append(leaves, &t)
+	}
+	return leaves
 }
