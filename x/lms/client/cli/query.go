@@ -19,6 +19,7 @@ func QueryCmd() *cobra.Command {
 	queryCmd.AddCommand(
 		GetStudentsCmd(),
 		GetLeavesCmd(),
+		GetaStudentCmd(),
 	)
 	return queryCmd
 }
@@ -58,6 +59,33 @@ func GetLeavesCmd() *cobra.Command {
 			//getStudentRequest := &types.GetStudentRequest{}
 			queryClient := types.NewQueryClient(clientCtx)
 			res, err := queryClient.QueryGetLeaves(cmd.Context(), &types.GetLeavesRequest{})
+			if err != nil {
+				panic(err)
+			}
+			return clientCtx.PrintProto(res)
+		},
+	}
+	flags.AddQueryFlagsToCmd(cmd)
+	return cmd
+}
+
+func GetaStudentCmd() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "getaStudent",
+		Short: "getStudents ",
+		Long:  "get list of all Students",
+		Args:  cobra.ExactArgs(1),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			clientCtx, err := client.GetClientQueryContext(cmd)
+			if err != nil {
+				panic(err)
+			}
+			id := args[0]
+			//getStudentRequest := &types.GetStudentRequest{}
+			queryClient := types.NewQueryClient(clientCtx)
+			res, err := queryClient.QueryGetaStudent(cmd.Context(), &types.GetaStudentRequest{
+				Id: id,
+			})
 			if err != nil {
 				panic(err)
 			}

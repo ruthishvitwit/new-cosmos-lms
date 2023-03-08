@@ -11,6 +11,8 @@ proto-gen:
 		sh ./scripts/protocgen.sh; fi
 	go mod tidy
 
+# simapp:
+  # ./simd init --chain-id testnet myvalidator && ./simd add-genesis-account validator-key 1000000000stake && ./simd add-genesis-account $(./simd keys show mykey1 -a) 10000000000stake && ./simd gentx validator-key 10000000000 --chain-id testnet && ./simd collect-gentxs && ./simd start
 
 #!/usr/bin/make -f
 

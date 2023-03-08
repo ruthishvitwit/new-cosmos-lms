@@ -120,3 +120,37 @@ func (msg ApplyLeaveRequest) ValidateBasic() error {
 	}
 	return nil
 }
+func NewAcceptLeaveReq(accountAddr sdk.AccAddress, leaves []*Leave) *ApplyLeaveRequest {
+	return &ApplyLeaveRequest{
+		Admin:  accountAddr.String(),
+		Leaves: leaves,
+	}
+}
+
+func (msg AcceptLeaveRequest) GetSignBytes() []byte {
+	return []byte{}
+}
+
+func (msg AcceptLeaveRequest) Route() string {
+	return RouterKey
+}
+
+func (msg AcceptLeaveRequest) Type() string {
+	return TypeAddStudent
+}
+
+func (msg AcceptLeaveRequest) GetSigners() []sdk.AccAddress {
+	valAddr, _ := sdk.AccAddressFromBech32(msg.Admin)
+	// valAddr, _ := sdk.AccAddressFromBech32(msg.Admin)
+	return []sdk.AccAddress{sdk.AccAddress(valAddr)}
+}
+
+func (msg AcceptLeaveRequest) ValidateBasic() error {
+	if _, err := sdk.AccAddressFromBech32(msg.Admin); err != nil {
+		return sdkerrors.ErrInvalidAddress.Wrapf("account input address: %s", err)
+	}
+	if msg.Admin == "" {
+		return errors.New("admin address cannot be empty")
+	}
+	return nil
+}

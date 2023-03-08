@@ -93,11 +93,18 @@ func NewApplyLeaveRequestCmd() *cobra.Command {
 			if err != nil {
 				return err
 			}
+			// a := "12-02-2022"
+			// b := "13-02-2022"
+			// const format = "2022-Feb-07"
+			// ssfrom, _ := time.Parse(format, "2022-Feb-07")
+			// to, _ := time.Parse(format, args[3])
 			adminaddress, _ := sdk.AccAddressFromBech32(args[0])
 			leaves := []*types.Leave{}
 			leave := &types.Leave{
 				Address: args[1],
 				Reason:  args[2],
+				// Sfrom:   a,
+				// To:      b,
 			}
 			leaves = append(leaves, leave)
 

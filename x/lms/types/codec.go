@@ -13,6 +13,7 @@ func RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
 	cdc.RegisterConcrete(&RegisterAdminRequest{}, "cosmos-lms/RegisterAdmin", nil)
 	cdc.RegisterConcrete(&AddStudentRequest{}, "cosmos-lms/AddStudent", nil)
 	cdc.RegisterConcrete(&ApplyLeaveRequest{}, "cosmos-lms/ApplyLeaves", nil)
+	cdc.RegisterConcrete(&AcceptLeaveRequest{}, "cosmos-lms/AcceptLeaves", nil)
 }
 
 func RegisterInterfaces(registry types.InterfaceRegistry) {
@@ -20,6 +21,7 @@ func RegisterInterfaces(registry types.InterfaceRegistry) {
 		&RegisterAdminRequest{},
 		&AddStudentRequest{},
 		&ApplyLeaveRequest{},
+		&AcceptLeaveRequest{},
 	)
 	msgservice.RegisterMsgServiceDesc(registry, &_Msg_serviceDesc)
 }

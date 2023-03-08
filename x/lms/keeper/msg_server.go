@@ -29,3 +29,8 @@ func (k Keeper) ApplyLeaves(ctx context.Context, req *types.ApplyLeaveRequest) (
 	k.ApplyLeave(sdkCtx, req)
 	return &types.ApplyLeaveResponse{}, nil
 }
+func (k Keeper) LeaveAccept(ctx context.Context, req *types.AcceptLeaveRequest) (*types.AcceptLeaveResponse, error) {
+	sdkCtx := sdk.UnwrapSDKContext(ctx)
+	k.AcceptLeave(sdkCtx, req)
+	return &types.AcceptLeaveResponse{}, nil
+}

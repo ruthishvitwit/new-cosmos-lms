@@ -14,6 +14,7 @@ var (
 	SKey  = []byte{0x02}
 	LKey  = []byte{0x03}
 	LcKey = []byte{0x04}
+	AcKey = []byte{0x05}
 )
 
 func AdminKey(admin string) []byte {
@@ -41,5 +42,11 @@ func LeaveCounterKey(id string) []byte {
 	key := make([]byte, len(LcKey)+len(id))
 	copy(key, LcKey)
 	copy(key[len(LcKey):], id)
+	return key
+}
+func AcceptLeaveKey(id string) []byte {
+	key := make([]byte, len(AcKey)+len(id))
+	copy(key, AcKey)
+	copy(key[len(AcKey):], id)
 	return key
 }

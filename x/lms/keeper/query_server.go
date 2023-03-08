@@ -21,3 +21,10 @@ func (k Keeper) QueryGetLeaves(goCtx context.Context, req *types.GetLeavesReques
 	//panic("eje")
 	return &types.GetLeavesResponse{Leaves: result}, nil
 }
+func (k Keeper) QueryGetaStudent(goCtx context.Context, req *types.GetaStudentRequest) (*types.GetaStudentResponse, error) {
+	ctx := sdk.UnwrapSDKContext(goCtx)
+	result := k.GetaStudent(ctx, req)
+	//hi:=&result
+	//panic("eje")
+	return &types.GetaStudentResponse{Students: result}, nil
+}
