@@ -48,23 +48,15 @@ func (msg RegisterAdminRequest) ValidateBasic() error {
 }
 
 // Add Student
-func NewAddStudentReq(accountAddr sdk.AccAddress, students []*Student) *AddStudentRequest {
+func NewAddStudentReq(accountAddr sdk.AccAddress, students Student) *AddStudentRequest {
 	return &AddStudentRequest{
 		Admin:    accountAddr.String(),
-		Students: students,
+		Students: &students,
 	}
 }
 
 func (msg AddStudentRequest) GetSignBytes() []byte {
 	return []byte{}
-}
-
-func (msg AddStudentRequest) Route() string {
-	return RouterKey
-}
-
-func (msg AddStudentRequest) Type() string {
-	return TypeAddStudent
 }
 
 func (msg AddStudentRequest) GetSigners() []sdk.AccAddress {
@@ -84,7 +76,7 @@ func (msg AddStudentRequest) ValidateBasic() error {
 	}
 	return nil
 }
-func NewApplyLeaveReq(accountAddr sdk.AccAddress, leaves []*Leave) *ApplyLeaveRequest {
+func NewApplyLeaveReq(accountAddr sdk.AccAddress, leaves *Leave) *ApplyLeaveRequest {
 	return &ApplyLeaveRequest{
 		Admin:  accountAddr.String(),
 		Leaves: leaves,
@@ -93,14 +85,6 @@ func NewApplyLeaveReq(accountAddr sdk.AccAddress, leaves []*Leave) *ApplyLeaveRe
 
 func (msg ApplyLeaveRequest) GetSignBytes() []byte {
 	return []byte{}
-}
-
-func (msg ApplyLeaveRequest) Route() string {
-	return RouterKey
-}
-
-func (msg ApplyLeaveRequest) Type() string {
-	return TypeAddStudent
 }
 
 func (msg ApplyLeaveRequest) GetSigners() []sdk.AccAddress {
@@ -120,23 +104,17 @@ func (msg ApplyLeaveRequest) ValidateBasic() error {
 	}
 	return nil
 }
-func NewAcceptLeaveReq(accountAddr sdk.AccAddress, leaves []*Leave) *ApplyLeaveRequest {
-	return &ApplyLeaveRequest{
-		Admin:  accountAddr.String(),
-		Leaves: leaves,
+func NewAcceptLeaveReq(accountAddr sdk.AccAddress, adress string, leaveid string, status string) *AcceptLeaveRequest {
+	return &AcceptLeaveRequest{
+		Admin:   accountAddr.String(),
+		Adress:  adress,
+		LeaveId: leaveid,
+		Status:  status,
 	}
 }
 
 func (msg AcceptLeaveRequest) GetSignBytes() []byte {
 	return []byte{}
-}
-
-func (msg AcceptLeaveRequest) Route() string {
-	return RouterKey
-}
-
-func (msg AcceptLeaveRequest) Type() string {
-	return TypeAddStudent
 }
 
 func (msg AcceptLeaveRequest) GetSigners() []sdk.AccAddress {

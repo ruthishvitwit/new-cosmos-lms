@@ -108,7 +108,7 @@ import (
 	_ "github.com/cosmos/cosmos-sdk/client/docs/statik"
 )
 
-const appName = "SimApp"
+const appName = "LmsApp"
 
 var (
 	// DefaultNodeHome default home directories for the application daemon
@@ -209,7 +209,7 @@ func init() {
 		panic(err)
 	}
 
-	DefaultNodeHome = filepath.Join(userHomeDir, ".simapp")
+	DefaultNodeHome = filepath.Join(userHomeDir, ".lmsapp")
 }
 
 // NewSimApp returns a reference to an initialized SimApp.

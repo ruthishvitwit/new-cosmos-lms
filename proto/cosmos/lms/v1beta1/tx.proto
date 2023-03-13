@@ -37,7 +37,7 @@ message AddStudentRequest {
     string admin = 1;
     
     // students is the list of Student.
-    repeated Student students = 2;
+    Student students = 2;
 }
 
 message AddStudentResponse{}
@@ -45,28 +45,29 @@ message AddStudentResponse{}
 message ApplyLeaveRequest {
     string admin =1;
     
-    repeated leave leaves=2;
+    leave leaves=2;
 }
 
 message ApplyLeaveResponse {
 
 }
 
-enum LeaveStatus {
-    STATUS_UNDEFINED = 0;
+// enum LeaveStatus {
+//     STATUS_UNDEFINED = 0;
     
-    STATUS_ACCEPTED = 1;
+//     STATUS_ACCEPTED = 1;
     
-    STATUS_REJECTED = 2;
-}
+//     STATUS_REJECTED = 2;
+// }
 
 message AcceptLeaveRequest {
 
     string admin = 1;
+    string adress=2;
     
-    string leave_id = 2;
+    string leave_id = 3;
     
-    LeaveStatus status = 3;
+    string status = 4;
 }
 
 message AcceptLeaveResponse {
@@ -91,6 +92,9 @@ message leave {
     google.protobuf.Timestamp sfrom = 3 [(gogoproto.stdtime)=true];
     
     google.protobuf.Timestamp to = 4 [(gogoproto.stdtime)=true];
+    string leaveid=6;
+
+    string status=5;
 }
 
 

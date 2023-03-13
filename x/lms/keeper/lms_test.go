@@ -41,7 +41,6 @@ func (s *TestSuite) SetupTest() {
 	s.ctx = ctx
 }
 
-// T retrieves the current *testing.T context.
 func (suite *TestSuite) T() *testing.T {
 	suite.mu.RLock()
 	defer suite.mu.RUnlock()
@@ -65,6 +64,10 @@ func (suite *TestSuite) Require() *require.Assertions {
 		suite.require = require.New(suite.T())
 	}
 	return suite.require
+}
+
+func TestTestSuite(t *testing.T) {
+	suite.Run(t, new(TestSuite))
 }
 
 ///////////////////// Register Admin Tests ////////////////////////
@@ -117,26 +120,14 @@ func (s *TestSuite) TestRegisterAdmin() {
 
 }
 func (s *TestSuite) TestAddStudent() {
-	students := []*types.Student{
-		{
-			Address: sdk.AccAddress("lms1").String(),
-			Name:    "hemanth1",
-			Id:      "1",
-		},
-		{
-			Address: sdk.AccAddress("lms2").String(),
-			Name:    "hemanth2",
-			Id:      "2",
-		},
-		{
-			Address: sdk.AccAddress("lms3").String(),
-			Name:    "hemanth3",
-			Id:      "3",
-		},
+	students := types.Student{
+		Address: sdk.AccAddress("lms1").String(),
+		Name:    "hemanth1",
+		Id:      "1",
 	}
 	req := types.AddStudentRequest{
 		Admin:    "Hemanthsai",
-		Students: students,
+		Students: &students,
 	}
 	s.stdntKeeper.AddStudent(s.ctx, &req)
 }
@@ -146,4 +137,31 @@ func (s *TestSuite) TestGetStudents() {
 	res := s.stdntKeeper.GetStudents(s.ctx, &types.GetStudentRequest{})
 	fmt.Println("Get Students Response: ")
 	fmt.Println(res)
+}
+func (s *TestSuite) TestApplyLeave() {
+	students := types.Leave{
+		Address: "add.stud",
+		Reason:  "sick",
+		Leaveid: "KYFJJY",
+		Status:  "pending",
+	}
+	req := types.ApplyLeaveRequest{
+		Admin:  "Hemanthsai",
+		Leaves: &students,
+	}
+	s.stdntKeeper.ApplyLeave(s.ctx, &req)
+}
+func (s *TestSuite) TestGetLeaves() {
+	s.TestApplyLeave()
+	res := s.stdntKeeper.GetLeaves(s.ctx, &types.GetLeavesRequest{})
+	fmt.Println("Get Students Response: ")
+	fmt.Println(res)
+}
+
+func (s *TestSuite) TestAcceptLeave() {
+	s.TestApplyLeave()
+	s.stdntKeeper.AcceptLeave(s.ctx, &types.AcceptLeaveRequest{Admin: "hi", Adress: "add.stud", LeaveId: "1", Status: "accepted"})
+	fmt.Println("Get Students Response: ")
+	req := s.stdntKeeper.GetLeaves(s.ctx, &types.GetLeavesRequest{})
+	fmt.Println(req)
 }

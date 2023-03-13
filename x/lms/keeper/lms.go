@@ -36,42 +36,36 @@ func (k Keeper) GetAdmin(ctx sdk.Context, id string) {
 func (k Keeper) AddStudent(ctx sdk.Context, addStudent *types.AddStudentRequest) string {
 	students := addStudent.Students
 	store := ctx.KVStore(k.storeKey)
-	for _, stud := range students {
-		marshalAddStudent, err := k.cdc.Marshal(stud)
-		if err != nil {
-			log.Fatal(err)
-		}
-		store.Set(types.StudentKey(stud.Address), marshalAddStudent)
+	marshalAddStudent, err := k.cdc.Marshal(students)
+	if err != nil {
+		log.Fatal(err)
 	}
+	store.Set(types.StudentKey(students.Address), marshalAddStudent)
 	return "Students Added Successfully"
 }
 func (k Keeper) ApplyLeave(ctx sdk.Context, applyleave *types.ApplyLeaveRequest) string {
-	leaves := applyleave.Leaves
+	leave := applyleave.Leaves
 	store := ctx.KVStore(k.storeKey)
-	for _, stud := range leaves {
-		marshalaplylv, err := k.cdc.Marshal(stud)
-		if err != nil {
-			log.Fatal(err)
-		}
 
-		leaveid := store.Get(types.LeaveCounterKey(applyleave.Admin))
-		leaveId, _ := strconv.Atoi(string(leaveid))
-		//k.cdc.Unmarshal(leaveid, &ty)
-		if leaveid == nil {
-			leaveId = 0
-		}
-
-		leaveId++
-		store.Set(types.LeaveCounterKey(applyleave.Admin), []byte(strconv.Itoa(leaveId)))
-
-		store.Set(types.LeaveKey(applyleave.Admin, leaveId), marshalaplylv)
+	leaveid := store.Get(types.LeaveCounterKey(applyleave.Leaves.Address))
+	leaveId, _ := strconv.Atoi(string(leaveid))
+	if leaveid == nil {
+		leaveId = 0
 
 	}
+	leaveId++
+	leave.Leaveid = strconv.Itoa(leaveId)
+	store.Set(types.LeaveCounterKey(applyleave.Leaves.Address), []byte(strconv.Itoa(leaveId)))
+	marshalaplylv, err := k.cdc.Marshal(leave)
+	if err != nil {
+		log.Fatal(err)
+	}
+	store.Set(types.LeaveKey(applyleave.Leaves.Address, leaveId), marshalaplylv)
+
 	return " leave applied Successfully"
 }
 func (k Keeper) GetStudents(ctx sdk.Context, getStudents *types.GetStudentRequest) []*types.Student {
 	store := ctx.KVStore(k.storeKey)
-
 	var students []*types.Student
 	itr := sdk.KVStorePrefixIterator(store, types.SKey)
 	for ; itr.Valid(); itr.Next() {
@@ -88,11 +82,18 @@ func (k Keeper) GetaStudent(ctx sdk.Context, getaStudent *types.GetaStudentReque
 	k.cdc.Unmarshal(v, &id)
 	return &id
 }
+func (k Keeper) GetaStudentleave(ctx sdk.Context, getaStudent *types.GetaStudentRequest) *types.Student {
+	store := ctx.KVStore(k.storeKey)
+	v := store.Get(types.StudentKey(getaStudent.Id))
+	var id types.Student
+	k.cdc.Unmarshal(v, &id)
+	return &id
+}
 func (k Keeper) GetLeaves(ctx sdk.Context, getLeaves *types.GetLeavesRequest) []*types.Leave {
 	store := ctx.KVStore(k.storeKey)
 
 	var leaves []*types.Leave
-	itr := store.Iterator(types.LKey, nil)
+	itr := sdk.KVStorePrefixIterator(store, types.LKey)
 	for ; itr.Valid(); itr.Next() {
 		var t types.Leave
 		k.cdc.Unmarshal(itr.Value(), &t)
@@ -100,10 +101,29 @@ func (k Keeper) GetLeaves(ctx sdk.Context, getLeaves *types.GetLeavesRequest) []
 	}
 	return leaves
 }
-func (k Keeper) AcceptLeave(ctx sdk.Context, getaStudent *types.AcceptLeaveRequest) *types.Student {
+func (k Keeper) AcceptLeave(ctx sdk.Context, StatusD *types.AcceptLeaveRequest) string {
+	stud := StatusD
 	store := ctx.KVStore(k.storeKey)
-	v := store.Get(types.AcceptLeaveKey(getaStudent.Admin))
-	var id types.Student
-	k.cdc.Unmarshal(v, &id)
-	return &id
+	id, _ := strconv.Atoi(string(stud.LeaveId))
+	v := store.Get(types.LeaveKey(stud.Adress, id))
+	var ki types.Leave
+	k.cdc.Unmarshal(v, &ki)
+	var ap types.Leave
+	fmt.Println("d ", ki, "sagrag", ki.Address)
+	ap.Address = ki.Address
+	ap.Leaveid = ki.Leaveid
+	ap.Reason = ki.Reason
+	ap.Status = stud.Status
+	ap.Sfrom = ki.Sfrom
+	ap.To = ki.To
+	fmt.Println(ap)
+	store.Delete(types.LeaveKey(stud.Adress, id))
+	c, _ := k.cdc.Marshal(&ap)
+	store.Set(types.LeaveKey(stud.Adress, id), c)
+	marshalAddStudent, err := k.cdc.Marshal(stud)
+	if err != nil {
+		log.Fatal(err)
+	}
+	store.Set(types.AcceptLeaveKey(stud.Adress), marshalAddStudent)
+	return "Students Added Successfully"
 }

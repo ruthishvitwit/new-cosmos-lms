@@ -24,7 +24,7 @@ import (
 	serverconfig "github.com/cosmos/cosmos-sdk/server/config"
 	servertypes "github.com/cosmos/cosmos-sdk/server/types"
 
-	lmsapp "clms/simapp"
+	lmsapp "clms/lmsapp"
 
 	"github.com/cosmos/cosmos-sdk/simapp/params"
 
@@ -51,7 +51,7 @@ func NewRootCmd() (*cobra.Command, params.EncodingConfig) {
 		WithViper("") // In simapp, we don't use any prefix for env variables.
 
 	rootCmd := &cobra.Command{
-		Use:   "simd",
+		Use:   "lmsa",
 		Short: "simulation app",
 		PersistentPreRunE: func(cmd *cobra.Command, _ []string) error {
 			// set the default command outputs
